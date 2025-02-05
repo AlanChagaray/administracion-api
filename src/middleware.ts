@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
     
-    const allowedOrigin = process.env.ADMIN_URL || 'http://localhost:3000';
+    const allowedOrigin = process.env.enviroment == 'production' ? 'https://administracion-titiacookies.vercel.app/':'http://localhost:3000/';
 
     if (req.method === "OPTIONS") {
         return new NextResponse(null, {
