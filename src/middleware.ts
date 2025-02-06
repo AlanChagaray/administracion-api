@@ -1,22 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Define el origen permitido directamente (Next.js no accede a process.env en middleware)
-const allowedOrigin =
-  process.env.NODE_ENV === "production"
-    ? "https://administracion-titiacookies.vercel.app"
-    : "http://localhost:3000";
-
 export function middleware(req: NextRequest) {
-  if (req.method === "OPTIONS") {
-    return new NextResponse(null, {
-      status: 204,
-      headers: {
-        "Access-Control-Allow-Origin": allowedOrigin,
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization",
-      },
-    });
-  }
+  console.log("🚀 Middleware ejecutado para:", req.nextUrl.pathname);
+  console.log("🌎 Entorno:", process.env.enviroment);
+
+  const allowedOrigin =
+    process.env.enviroment === "production"
+      ? "https://administracion-titiacookies.vercel.app"
+      : "http://localhost:3000";
 
   const response = NextResponse.next();
   response.headers.set("Access-Control-Allow-Origin", allowedOrigin);
@@ -27,5 +18,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: "/api/:path*",
+  matcher: ["/api/:path*", "/app/api/:path*"],
 };
