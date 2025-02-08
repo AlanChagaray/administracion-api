@@ -5,7 +5,7 @@ export function middleware(req: NextRequest) {
   console.log("🌎 Entorno:", process.env.enviroment);
 
   const allowedOrigin =
-    process.env.enviroment === "production"
+    process.env.NODE_ENV === "production"
       ? "https://administracion-titiacookies.vercel.app"
       : "http://localhost:3000";
 
