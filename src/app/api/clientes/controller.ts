@@ -9,12 +9,16 @@ export async function buscar(req : NextRequest) {
     const apellido = searchParams.get('apellido') || null;
     const telefono = searchParams.get('telefono') || null;
 
-    if(idcliente) {
-        const cliente = await Cliente.get(idcliente);
-        return NextResponse.json(cliente);
-    }else{
-        const clientes = await Cliente.search({ nombre, apellido, telefono });
-        return NextResponse.json(clientes);
+    try {
+      if(idcliente) {
+          const cliente = await Cliente.get(idcliente);
+          return NextResponse.json(cliente);
+      }else{
+          const clientes = await Cliente.search({ nombre, apellido, telefono });
+          return NextResponse.json(clientes);
+      }
+    } catch (error) {
+        return NextResponse.json({ message: 'Error al buscar cliente' }, {status : 400})      
     }
 
 }
@@ -26,7 +30,7 @@ export async function ingresar(req : NextRequest) {
         return NextResponse.json(result, { status: 200 });
       } catch (error) {
         console.error(error); 
-        return NextResponse.json({ message: 'Error creating cliente' }, { status: 500 });
+        return NextResponse.json({ message: 'Error al ingresar cliente' }, { status: 400 });
       }
 }
 
@@ -37,7 +41,7 @@ export async function editar(req: NextRequest) {
       return NextResponse.json(result, { status: 200 });
     } catch (error) {
       console.error(error); 
-      return NextResponse.json({ message: 'Error updating cliente' }, { status: 500 });
+      return NextResponse.json({ message: 'Error al actualizar cliente' }, { status: 400 });
     }
   }
 
@@ -54,6 +58,6 @@ export async function eliminar(req: NextRequest) {
       }
     } catch (error) {
       console.error(error); 
-      return NextResponse.json({ message: 'Error deleting cliente' }, { status: 500 });
+      return NextResponse.json({ message: 'Error al eliminar cliente' }, { status: 400 });
     }
   }

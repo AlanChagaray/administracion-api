@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export function middleware(req: NextRequest) {
-  console.log("🚀 Middleware ejecutado para:", req.nextUrl.pathname);
-  console.log("🌎 Entorno:", process.env.enviroment);
-
+export async function middleware(req: NextRequest) {
   const allowedOrigin =
     process.env.NODE_ENV === "production"
       ? "https://administracion-titiacookies.vercel.app"
@@ -13,7 +10,29 @@ export function middleware(req: NextRequest) {
   response.headers.set("Access-Control-Allow-Origin", allowedOrigin);
   response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  response.headers.set("Access-Control-Allow-Credentials", "true");
 
+  if (req.method === "OPTIONS") {
+    return response;
+  }
+  
+  if (req.nextUrl.pathname.startsWith("/api/auth")) {
+    return response;
+  }
+  const token = req.cookies.get("access_token")?.value;
+  console.log("token: ",token)
+  if (!token) {
+    return new NextResponse(JSON.stringify({ message: "No autorizado" }), {
+      status: 401,
+          headers: { 
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": allowedOrigin,
+          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Authorization",
+          "Access-Control-Allow-Credentials": "true",
+        }
+    });
+  }
   return response;
 }
 
