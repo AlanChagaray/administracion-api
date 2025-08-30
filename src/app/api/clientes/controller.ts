@@ -18,6 +18,7 @@ export async function buscar(req : NextRequest) {
           return NextResponse.json(clientes);
       }
     } catch (error) {
+        console.log(error);
         return NextResponse.json({ message: 'Error al buscar cliente' }, {status : 400})      
     }
 
